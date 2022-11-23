@@ -35,20 +35,11 @@ const StudioAPI = {
   siteId() {
     return craftercms.getStore().getState().sites.active;
   },
-  getSelectedItem: function(): SelectedItemType {
-    if (!craftercms.getStore().getState().preview.guest) {
-      return null;
-    }
-    const selectedPath = craftercms.getStore().getState().preview.guest.path;
-    if (!selectedPath) return null;
-
-    const item = craftercms.getStore().getState().content.itemsByPath[selectedPath];
-    if (!item) return null;
-
+  getPreviewItem: function(previewItem): SelectedItemType {
     return {
-      name: item.label,
-      path: item.path,
-      contentType: item.contentTypeId,
+      name: previewItem.label,
+      path: previewItem.path,
+      contentType: previewItem.contentTypeId,
     };
   },
   openEditForm: function(contentType: string, path: string) {

@@ -14,27 +14,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, forwardRef } from 'react';
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps, AlertColor } from '@mui/material/Alert';
-import DialogActions from '@mui/material/DialogActions';
-
+import React from 'react';
 import { CrafterThemeProvider } from '@craftercms/studio-ui';
-import { closeWidgetDialog } from '@craftercms/studio-ui/state/actions/dialogs';
-
-import { useDispatch } from 'react-redux';
+import useCurrentPreviewItem from '@craftercms/studio-ui/hooks/useCurrentPreviewItem';
 
 import SelectedItem from './components/SelectedItem';
 import TreeView from './components/TreeView';
-import { StyledCancelButton, StyledMainButton } from './components/StyledButton';
-
-import { copyDestSub } from './service/subscribe';
+import AppActions from './components/AppActions';
 import StudioAPI from './api/studio';
 
 const DEFAULT_WEBSITE_PATH = '/site/website';
 const DEFAULT_COMPONENT_PATH = '/site/components';
-const ALERT_AUTO_HIDE_DURATION = 4000;
 
 /**
  * Get root directory
@@ -55,121 +45,19 @@ const ALERT_AUTO_HIDE_DURATION = 4000;
   return null;
 };
 
-const Alert = forwardRef(function Alert(props: AlertProps, ref: any) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
 export default function App() {
-  const dispatch = useDispatch();
-  const [alert, setAlert] = useState<{ open: boolean, severity: AlertColor, message: string}>({ open: false, severity: 'info', message: '' });
-  const [desPath, setDesPath] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  const selectedItem = StudioAPI.getSelectedItem();
+  const currentPreviewItem = useCurrentPreviewItem();
+  const selectedItem = currentPreviewItem ? StudioAPI.getPreviewItem(currentPreviewItem) : null;
   const rootDir = getRootDir(selectedItem);
-  copyDestSub.subscribe((path) => {
-    setDesPath(path);
-  });
-
-  const resetState = () => {
-    setDesPath('');
-    setIsProcessing(false);
-  };
-
-  const handleClose = (event: React.MouseEvent<HTMLElement>, reason?: string) => {
-    if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
-      resetState();
-      dispatch(closeWidgetDialog());
-    }
-  };
-
-  const onCloseAlert = () => {
-    setAlert(Object.assign({}, {
-      open: false,
-      severity: alert.severity,
-      message: alert.message,
-    }));
-  }
-
-  const handleCopy = async (event: React.MouseEvent<HTMLElement>, openEditForm: boolean) => {
-    event.preventDefault();
-
-    const selectedItem = StudioAPI.getSelectedItem();
-    if (isProcessing || !desPath || !selectedItem || !selectedItem.path) {
-      return;
-    }
-
-    setIsProcessing(true);
-    const path = selectedItem.path;
-    const destinationPath = desPath;
-    const res = await StudioAPI.copyItem(path, destinationPath);
-    if (res) {
-      const pastePath = res.items[0];
-      if (openEditForm && path) {
-        StudioAPI.openEditForm(selectedItem.contentType, pastePath);
-      }
-    } else {
-      setIsProcessing(false);
-      return setAlert({
-        open: true,
-        severity: 'error',
-        message: `There is an error while copying file: ${path}`,
-      });
-    }
-
-    if (!openEditForm) {
-      setAlert({
-        open: true,
-        severity: 'success',
-        message: 'Selected files are copied to destination folder.',
-      });
-    }
-
-    setIsProcessing(false);
-  }
-
-  const handleCopyAndOpen = (event: React.MouseEvent<HTMLElement>) => {
-    const openEditForm = true;
-    handleCopy(event, openEditForm);
-  };
 
   return (
     <CrafterThemeProvider>
       <SelectedItem selectedItem={selectedItem} />
       <TreeView rootDir={rootDir} />
-      <DialogActions>
-        <StyledCancelButton
-            variant="outlined"
-            color="primary"
-            onClick={(event) => handleClose(event, null)}
-            disabled={isProcessing}
-          >
-            Close
-          </StyledCancelButton>
-          <StyledMainButton
-            variant="contained"
-            color="primary"
-            onClick={(event) => handleCopy(event, false)}
-            disabled={isProcessing || !rootDir || !desPath}
-          >
-            Copy
-          </StyledMainButton>
-          <StyledMainButton
-            variant="contained"
-            color="primary"
-            onClick={handleCopyAndOpen}
-            disabled={isProcessing || !rootDir || !desPath}
-          >
-            Copy and Edit
-          </StyledMainButton>
-      </DialogActions>
-      <Stack spacing={2} sx={{ width: '100%' }}>
-        <Snackbar open={alert && alert.open} autoHideDuration={ALERT_AUTO_HIDE_DURATION} onClose={onCloseAlert}>
-          <Alert onClose={onCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>
-            {alert.message}
-          </Alert>
-        </Snackbar>
-      </Stack>
+      <AppActions
+        rootDir={rootDir}
+        selectedItem={selectedItem}
+      />
     </CrafterThemeProvider>
   );
 }
