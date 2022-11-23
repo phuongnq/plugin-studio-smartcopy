@@ -14,21 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const HttpHelper = {
-  get(url) {
-    return new Promise((resolve, reject) => {
-      CrafterCMSNext.util.ajax.get(url).subscribe((response) => {
-        resolve(response);
-      });
-    });
-  },
-  post(url, body, headers) {
-    return new Promise((resolve, reject) => {
-      CrafterCMSNext.util.ajax.post(url, body, headers).subscribe((response) => {
-        resolve(response);
-      });
-    });
-  }
-};
+import { Subject } from 'rxjs';
 
-export default HttpHelper;
+const copyDestSub = new Subject<string>();
+
+export {
+  copyDestSub,
+};

@@ -9,16 +9,14 @@ import StyledTableCell from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 
-
-export interface SelectedItemProps {
-}
+import { SelectedItemType } from '../api/studio';
 
 function createData(name, path) {
   return { name, path };
 }
 
 
-const SelectedItem = ({  }: SelectedItemProps) => {
+const SelectedItem = ({ selectedItem }: { selectedItem: SelectedItemType}) => {
   const row = selectedItem ? createData(selectedItem.name, selectedItem.path) : null;
 
   return (

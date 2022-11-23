@@ -29,7 +29,7 @@ export default function NewFolderDialog({ open, onClose, path }) {
   const [folderName, setFolderName] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const onSubmit = async () => {
+  const handleSubmit = async () => {
     if (folderName && path) {
       setIsProcessing(true);
       const res = await StudioAPI.createFolder(path, folderName);
@@ -39,14 +39,14 @@ export default function NewFolderDialog({ open, onClose, path }) {
     }
   };
 
-  const closeWithoutSubmit = () => {
+  const handleCancel = () => {
     setFolderName('');
     onClose();
   };
 
   return (
     <div>
-      <StyledDialogComponent open={open} onClose={closeWithoutSubmit} aria-labelledby="draggable-dialog-title">
+      <StyledDialogComponent open={open} onClose={handleCancel} aria-labelledby="draggable-dialog-title">
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
           Create a New Folder
         </DialogTitle>
@@ -69,17 +69,17 @@ export default function NewFolderDialog({ open, onClose, path }) {
           />
         </DialogContent>
         <DialogActions>
+          <StyledCancelButton variant="outlined" color="primary" onClick={handleCancel}>
+            Cancel
+          </StyledCancelButton>
           <StyledMainButton
             variant="contained"
             color="primary"
-            onClick={onSubmit}
+            onClick={handleSubmit}
             disabled={!folderName || isProcessing}
           >
             Create
           </StyledMainButton>
-          <StyledCancelButton variant="outlined" color="primary" onClick={closeWithoutSubmit}>
-            Cancel
-          </StyledCancelButton>
         </DialogActions>
       </StyledDialogComponent>
     </div>

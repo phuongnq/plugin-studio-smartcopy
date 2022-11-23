@@ -3,7 +3,7 @@ import ToolsPanelListItemButton from '@craftercms/studio-ui/components/ToolsPane
 import { showWidgetDialog } from '@craftercms/studio-ui/state/actions/dialogs';
 import { useDispatch } from 'react-redux';
 
-export function Foo(props) {
+export function OpenSmartCopyPanelButton(props) {
   const buttonLabel = props.title ? props.title : 'Smart Copy';
   const buttonIcon = props.icon && props.icon.id ? props.icon.id : '@mui/icons-material/ContentPasteOutlined';
 
@@ -27,4 +27,4 @@ export function Foo(props) {
   );
 }
 
-export default Foo;
+export default OpenSmartCopyPanelButton;

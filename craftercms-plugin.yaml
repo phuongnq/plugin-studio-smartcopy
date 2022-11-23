@@ -22,7 +22,7 @@ plugin:
   media:
     screenshots:
       - title: CrafterCMS
-        description: CrafterCMS Plugin for Smart Copy 
+        description: CrafterCMS Plugin for Smart Copy
         url: "https://raw.githubusercontent.com/russdanner/plugin-studio-smartcopy/master/.crafter/logo.png"
   developer:
     company:
@@ -53,13 +53,13 @@ plugin:
     - enterprise
   installation:
     - type: preview-app
-      elementXpath: //widget[@id='org.rd.plugin.smartcopy.openBoardButton']
+      elementXpath: //widget[@id='org.rd.plugin.smartcopy.openSmartCopyPanelButton']
       parentXpath: //widget[@id='craftercms.components.ToolsPanel']/configuration/widgets
       element:
         name: widget
         attributes:
           - name: id
-            value: org.rd.plugin.smartcopy.openBoardButton
+            value: org.rd.plugin.smartcopy.openSmartCopyPanelButton
         children:
           - name: plugin
             attributes:
@@ -73,3 +73,30 @@ plugin:
                 value: smartcopy
               - name: file
                 value: index.js
+    - type: preview-app
+      elementXpath: //plugin[@id='org.rd.plugin.smartcopy.openSmartCopyToolbarButton']
+      parentXpath: //widget[@id='craftercms.components.PreviewToolbar']
+      element:
+        name: configuration
+        children:
+        - name: rightSection
+          children:
+          - name: widgets
+            children:
+            - name: widget
+              attributes:
+              - name: id
+                value: org.rd.plugin.smartcopy.openSmartCopyToolbarButton
+              children:
+              - name: plugin
+                attributes:
+                - name: id
+                  value: org.rd.plugin.smartcopy
+                - name: site
+                  value: "{site}"
+                - name: type
+                  value: apps
+                - name: name
+                  value: smartcopy
+                - name: file
+                  value: index.js
