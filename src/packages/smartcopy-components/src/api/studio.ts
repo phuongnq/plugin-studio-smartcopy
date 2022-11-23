@@ -22,37 +22,33 @@ const API_CREATE_FOLDER = '/studio/api/1/services/api/1/content/create-folder.js
 const API_RENAME_FOLDER = '/studio/api/1/services/api/1/content/rename-folder.json';
 const API_CONTENT_PASTE = '/studio/api/2/content/paste';
 
+export type SelectedItemType = {
+  name: string;
+  path: string;
+  contentType: string;
+};
+
 const StudioAPI = {
   origin() {
     return window.location.origin;
   },
   siteId() {
-    return CrafterCMSNext.system.store.getState().sites.active;
+    return craftercms.getStore().getState().sites.active;
   },
-  getSelectedItem: function() {
-    if (!craftercms.getStore().getState().preview.guest) {
-      return null;
-    }
-    const selectedPath = craftercms.getStore().getState().preview.guest.path;
-    if (!selectedPath) return null;
-
-    const item = craftercms.getStore().getState().content.itemsByPath[selectedPath];
-    if (!item) return null;
-
+  getPreviewItem: function(previewItem): SelectedItemType {
     return {
-      name: item.label,
-      path: item.path,
-      contentType: item.contentTypeId,
+      name: previewItem.label,
+      path: previewItem.path,
+      contentType: previewItem.contentTypeId,
     };
-
   },
-  openEditForm: function(contentType, path) {
-    const site = CrafterCMSNext.system.store.getState().sites.active;
-    const authoringBase = CrafterCMSNext.system.store.getState().env.authoringBase;
+  openEditForm: function(contentType: string, path: string) {
+    const site = StudioAPI.siteId();
+    const authoringBase = craftercms.getStore().getState().env.authoringBase;
     const eventIdSuccess = 'editDialogSuccess';
     const eventIdDismissed = 'editDialogDismissed';
 
-    return CrafterCMSNext.system.store.dispatch({
+    return craftercms.getStore().dispatch({
       type: 'SHOW_EDIT_DIALOG',
       payload: {
         site: site,
@@ -90,8 +86,9 @@ const StudioAPI = {
       }
     });
   },
-  async getChildrenPaths(path) {
-    const res = await HttpHelper.get(`${StudioAPI.origin()}${API_GET_ITEM_TREE}?site=${StudioAPI.siteId()}&path=${path}&depth=1`);
+  async getChildrenPaths(path: string) {
+    const url = `${StudioAPI.origin()}${API_GET_ITEM_TREE}?site=${StudioAPI.siteId()}&path=${path}&depth=1`;
+    const res = await HttpHelper.get(url);
 
     if (res.status === 200) {
       return res.response.item.children.filter(child => child.path !== path).map(child => {
@@ -101,8 +98,9 @@ const StudioAPI = {
 
     return [];
   },
-  async getItem(path) {
-    const res = await HttpHelper.get(`${StudioAPI.origin()}${API_GET_ITEM}?site=${StudioAPI.siteId()}&path=${path}&populateDependencies=false`);
+  async getItem(path: string) {
+    const url = `${StudioAPI.origin()}${API_GET_ITEM}?site=${StudioAPI.siteId()}&path=${path}&populateDependencies=false`;
+    const res = await HttpHelper.get(url);
 
     if (res.status === 200) {
       return res.response;
@@ -110,15 +108,18 @@ const StudioAPI = {
 
     return null;
   },
-  async copyItem(path, destinationPath) {
-    const res = await HttpHelper.post(`${StudioAPI.origin()}${API_CONTENT_PASTE}`, {
+  async copyItem(path: string, destinationPath: string) {
+    const url = `${StudioAPI.origin()}${API_CONTENT_PASTE}`;
+    const headers = {};
+    const body = {
       siteId: StudioAPI.siteId(),
       operation: 'COPY',
       targetPath: destinationPath,
       item: {
         path,
       }
-    });
+    };
+    const res = await HttpHelper.post(url, body, headers);
 
     if (res.status === 200) {
       return res.response;
@@ -126,9 +127,11 @@ const StudioAPI = {
 
     return null;
   },
-  async createFolder(path, name) {
+  async createFolder(path: string, name: string) {
+    const url = `${StudioAPI.origin()}${API_CREATE_FOLDER}?site=${StudioAPI.siteId()}&path=${path}&name=${name}`;
     const body = '';
-    const res = await HttpHelper.post(`${StudioAPI.origin()}${API_CREATE_FOLDER}?site=${StudioAPI.siteId()}&path=${path}&name=${name}`, body);
+    const headers = {};
+    const res = await HttpHelper.post(url, body, headers);
 
     if (res.status === 200) {
       return res.response;
@@ -136,9 +139,11 @@ const StudioAPI = {
 
     return false;
   },
-  async renameFolder(path, name) {
+  async renameFolder(path: string, name: string) {
+    const url = `${StudioAPI.origin()}${API_RENAME_FOLDER}?site=${StudioAPI.siteId()}&path=${path}&name=${name}`;
     const body = '';
-    const res = await HttpHelper.post(`${StudioAPI.origin()}${API_RENAME_FOLDER}?site=${StudioAPI.siteId()}&path=${path}&name=${name}`, body);
+    const headers = {};
+    const res = await HttpHelper.post(url, body, headers);
 
     if (res.status === 200) {
       return res.response;

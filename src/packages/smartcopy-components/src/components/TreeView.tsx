@@ -6,12 +6,10 @@ import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
 
 import StyledTableRow from '@mui/material/TableRow';
 import StyledTableCell from '@mui/material/TableCell';
@@ -23,11 +21,11 @@ import StudioAPI from '../api/studio';
 import { copyDestSub } from '../service/subscribe';
 
 export default function FileSystemNavigator({ rootDir }) {
-  const [nodes, setNodes] = useState([]);
+  const [nodes, setNodes] = useState({});
   const [expanded, setExpanded] = useState([]);
   const [selected, setSelected] = useState('');
   const [rightClickAnchorEl, setRightClickAnchorEl] = useState(null);
-  const [rightClickPosition, setRightClickPosition] = useState({});
+  const [rightClickPosition, setRightClickPosition] = useState<{ path?: string, pageX?: number, pageY?: number}>({});
   const [newFolderDialogOpen, setNewFolderDialogOpen] = useState(false);
   const [renameFolderDialogOpen, setRenameFolderDialogOpen] = useState(false);
 
@@ -60,7 +58,7 @@ export default function FileSystemNavigator({ rootDir }) {
       }
     }
 
-    let foundNode = {};
+    let foundNode : any = {};
     // go throush each path from root to the last child node
     while (fullPaths.length > 0) {
       const currPath = fullPaths.shift();
@@ -75,10 +73,10 @@ export default function FileSystemNavigator({ rootDir }) {
     return foundNode;
   };
 
-  const handleSelect = async (event, nodeId) => {
+  const handleSelect = async (event, nodeId: string) => {
     setSelected(nodeId);
     copyDestSub.next(nodeId);
-    fetchChildNodes(nodeId);
+    fetchChildNodes(nodeId, false);
   };
 
   /**
@@ -86,7 +84,8 @@ export default function FileSystemNavigator({ rootDir }) {
    * @param {*} nodeId
    * @returns
    */
-  const fetchChildNodes = async (nodeId, forceUpdate) => {
+  const fetchChildNodes = async (nodeId: string, forceUpdate: boolean) => {
+    if (!nodeId) return;
     // First, find a node by its path
     // If found and it has children, return since no need to fetch data anymore
     const foundNode = findNode(nodeId, nodes);
@@ -130,6 +129,10 @@ export default function FileSystemNavigator({ rootDir }) {
    * @returns
    */
   const renderTree = (nodes) => {
+    if (!nodes.id) {
+      return (<TreeItem nodeId="empty-tree"></TreeItem>);
+    }
+
     return (
       <TreeItem
         key={nodes.id}
@@ -140,13 +143,13 @@ export default function FileSystemNavigator({ rootDir }) {
         {Array.isArray(nodes.children) && nodes.children.length > 0 ? (
           nodes.children.map((node) => renderTree(node))
         ) : (
-          <TreeItem />
+          <TreeItem nodeId="empty-tree"></TreeItem>
         )}
       </TreeItem>
     );
   };
 
-  const onNodeContextMenuClick = (event, nodeId) => {
+  const onNodeContextMenuClick = (event: React.MouseEvent<HTMLElement>, nodeId: string) => {
     event.stopPropagation();
     event.preventDefault();
     setSelected(nodeId);
@@ -193,20 +196,22 @@ export default function FileSystemNavigator({ rootDir }) {
           </Table>
         </TableContainer>
         <TreeView
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
+          defaultCollapseIcon={<ExpandMoreOutlinedIcon />}
+          defaultExpandIcon={<ChevronRightOutlinedIcon />}
           defaultExpanded={[rootDir]}
           expanded={expanded}
           selected={selected}
           onNodeToggle={handleToggle}
           onNodeSelect={handleSelect}
-          sx={{ height: 360, flexGrow: 1, maxWidth: '100%', overflowY: 'auto' }}
+          sx={{ height: 'calc(90vh - 64px - 1px - 140px - 110px - 30px - 64px - 15px)', flexGrow: 1, maxWidth: '100%', overflowY: 'auto' }}
         >
           {renderTree(nodes)}
         </TreeView>
         <ActionMenu
           anchorEl={rightClickAnchorEl}
-          onClose={() => setRightClickAnchorEl(null)}
+          onMenuClose={() => {
+            setRightClickAnchorEl(null)
+          }}
           position={rightClickPosition}
           onCreateFolder={() => {
             setRightClickAnchorEl(null);

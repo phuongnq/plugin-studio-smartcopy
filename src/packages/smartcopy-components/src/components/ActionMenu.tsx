@@ -20,13 +20,12 @@ import Paper from '@mui/material/Paper';
 import MenuList from '@mui/material/MenuList';
 import Grow from '@mui/material/Grow';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
-import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
+import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import { styled, alpha } from '@mui/material/styles';
 
-const StyledMenu = styled((props) => (
+const StyledMenu = styled((props: any) => (
   <Popper
-    elevation={0}
     {...props}
   />
 ))(({ theme }) => ({
@@ -57,14 +56,17 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function ActionMenu({ anchorEl, onClose, position, onCreateFolder, onRenameFolder, onContextMenu }) {
+export default function ActionMenu({ anchorEl, position, onMenuClose, onCreateFolder, onRenameFolder, onContextMenu } : {
+  anchorEl: any, position: any, onMenuClose: () => void, onCreateFolder: (() => void),
+  onRenameFolder: (() => void), onContextMenu: ((event: React.MouseEvent<HTMLElement>) => void)
+}) {
   const open = Boolean(anchorEl);
   const { pageX, pageY } = position;
 
   function handleListKeyDown(event) {
     if (event.key === 'Tab' || event.key === 'Escape') {
       event.preventDefault();
-      onClose();
+      onMenuClose();
     }
   }
 
@@ -73,7 +75,7 @@ export default function ActionMenu({ anchorEl, onClose, position, onCreateFolder
       return;
     }
 
-    onClose();
+    onMenuClose();
   };
 
   return (
@@ -81,16 +83,18 @@ export default function ActionMenu({ anchorEl, onClose, position, onCreateFolder
       <StyledMenu
         anchorEl={{
           getBoundingClientRect: () => ({
+            x: pageX,
+            y: pageY,
             width: 0,
             height: 0,
             top: pageY,
             right: pageX,
             bottom: pageY,
             left: pageX
-          })
+          } as DOMRect)
         }}
         open={open}
-        onClose={onClose}
+        onClose={onMenuClose}
         onContextMenu={(event) => onContextMenu(event)}
         role={undefined}
         placement="bottom-start"
@@ -114,11 +118,11 @@ export default function ActionMenu({ anchorEl, onClose, position, onCreateFolder
                     onKeyDown={handleListKeyDown}
                   >
                     <MenuItem onClick={onCreateFolder} disableRipple>
-                      <CreateNewFolderIcon />
+                      <CreateNewFolderOutlinedIcon />
                       Create new folder
                     </MenuItem>
                     <MenuItem onClick={onRenameFolder} disableRipple>
-                      <BorderColorIcon />
+                      <BorderColorOutlinedIcon />
                       Rename
                     </MenuItem>
                   </MenuList>

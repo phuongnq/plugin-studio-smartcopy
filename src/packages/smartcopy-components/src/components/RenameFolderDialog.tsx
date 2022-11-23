@@ -35,7 +35,7 @@ export default function RenameFolderDialog({ open, onClose, path }) {
     }
   }, [path]);
 
-  const onSubmit = async () => {
+  const handleSubmit = async () => {
     if (folderName && path) {
       setIsProcessing(true);
       const res = await StudioAPI.renameFolder(path, folderName);
@@ -44,13 +44,13 @@ export default function RenameFolderDialog({ open, onClose, path }) {
     }
   };
 
-  const closeWithoutSubmit = () => {
+  const handleCancel = () => {
     onClose();
   };
 
   return (
     <div>
-      <StyledDialogComponent open={open} onClose={closeWithoutSubmit} aria-labelledby="draggable-dialog-title">
+      <StyledDialogComponent open={open} onClose={handleCancel} aria-labelledby="draggable-dialog-title">
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
           Rename Folder
         </DialogTitle>
@@ -73,17 +73,17 @@ export default function RenameFolderDialog({ open, onClose, path }) {
           />
         </DialogContent>
         <DialogActions>
+          <StyledCancelButton variant="outlined" color="primary" onClick={handleCancel}>
+            Cancel
+          </StyledCancelButton>
           <StyledMainButton
             variant="contained"
             color="primary"
-            onClick={onSubmit}
+            onClick={handleSubmit}
             disabled={!folderName || isProcessing}
           >
             Rename
           </StyledMainButton>
-          <StyledCancelButton variant="outlined" color="primary" onClick={closeWithoutSubmit}>
-            Cancel
-          </StyledCancelButton>
         </DialogActions>
       </StyledDialogComponent>
     </div>
