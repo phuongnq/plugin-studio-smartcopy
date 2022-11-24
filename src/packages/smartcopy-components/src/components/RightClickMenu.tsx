@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Popper from '@mui/material/Popper';
@@ -56,25 +57,24 @@ const StyledMenu = styled((props: any) => (
   },
 }));
 
-export default function ActionMenu({ anchorEl, position, onMenuClose, onCreateFolder, onRenameFolder, onContextMenu } : {
+export default function RightClickMenu({ anchorEl, position, onMenuClose, onCreateFolder, onRenameFolder, onContextMenu } : {
   anchorEl: any, position: any, onMenuClose: () => void, onCreateFolder: (() => void),
   onRenameFolder: (() => void), onContextMenu: ((event: React.MouseEvent<HTMLElement>) => void)
 }) {
   const open = Boolean(anchorEl);
   const { pageX, pageY } = position;
 
-  function handleListKeyDown(event) {
+  const handleKeyDown = (event) => {
     if (event.key === 'Tab' || event.key === 'Escape') {
       event.preventDefault();
       onMenuClose();
     }
-  }
+  };
 
   const handleClose = (event) => {
     if (anchorEl.current && anchorEl.current.contains(event.target)) {
       return;
     }
-
     onMenuClose();
   };
 
@@ -95,7 +95,7 @@ export default function ActionMenu({ anchorEl, position, onMenuClose, onCreateFo
         }}
         open={open}
         onClose={onMenuClose}
-        onContextMenu={(event) => onContextMenu(event)}
+        onContextMenu={(event: React.MouseEvent<HTMLElement>) => onContextMenu(event)}
         role={undefined}
         placement="bottom-start"
         transition
@@ -115,7 +115,7 @@ export default function ActionMenu({ anchorEl, position, onMenuClose, onCreateFo
                     autoFocusItem={open}
                     id="composition-menu"
                     aria-labelledby="composition-button"
-                    onKeyDown={handleListKeyDown}
+                    onKeyDown={handleKeyDown}
                   >
                     <MenuItem onClick={onCreateFolder} disableRipple>
                       <CreateNewFolderOutlinedIcon />
@@ -133,4 +133,4 @@ export default function ActionMenu({ anchorEl, position, onMenuClose, onCreateFo
       </StyledMenu>
     </div>
   );
-}
+};
