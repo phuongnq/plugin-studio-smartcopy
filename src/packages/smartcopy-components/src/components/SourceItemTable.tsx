@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2007-2022 Crafter Software Corporation. All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,21 +25,20 @@ import StyledTableCell from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 
-import { SelectedItemType } from '../api/studio';
+import { PreviewItemType } from '../api/studio';
 
-function createData(name, path) {
+const createData = (name: string, path: string) => {
   return { name, path };
-}
+};
 
-
-const SelectedItem = ({ selectedItem }: { selectedItem: SelectedItemType}) => {
-  const row = selectedItem ? createData(selectedItem.name, selectedItem.path) : null;
+const SourceItemTable = ({ sourceItem }: { sourceItem: PreviewItemType}) => {
+  const row = sourceItem ? createData(sourceItem.name, sourceItem.path) : null;
 
   return (
     <>
       <Grid container sx={{ padding: '15px' }}>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="selected item table">
+          <Table sx={{ minWidth: 650 }} aria-label="source item table">
             <TableHead>
               <TableRow>
                 <StyledTableCell>Name</StyledTableCell>
@@ -47,4 +62,4 @@ const SelectedItem = ({ selectedItem }: { selectedItem: SelectedItemType}) => {
   );
 }
 
-export default SelectedItem;
+export default SourceItemTable;

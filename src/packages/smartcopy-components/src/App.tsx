@@ -18,10 +18,10 @@ import React from 'react';
 import { CrafterThemeProvider } from '@craftercms/studio-ui';
 import useCurrentPreviewItem from '@craftercms/studio-ui/hooks/useCurrentPreviewItem';
 
-import SelectedItem from './components/SelectedItem';
-import TreeView from './components/TreeView';
+import SourceItemTable from './components/SourceItemTable';
+import DirectoryTreeView from './components/DirectoryTreeView';
 import AppActions from './components/AppActions';
-import StudioAPI from './api/studio';
+import StudioAPI, { PreviewItemType } from './api/studio';
 
 const DEFAULT_WEBSITE_PATH = '/site/website';
 const DEFAULT_COMPONENT_PATH = '/site/components';
@@ -33,7 +33,7 @@ const DEFAULT_COMPONENT_PATH = '/site/components';
  * Default: /site
  * @returns root directory
  */
-  const getRootDir = (item) => {
+  const getRootDir = (item: PreviewItemType) => {
   if (item && item.path && item.path.startsWith(DEFAULT_WEBSITE_PATH)) {
     return DEFAULT_WEBSITE_PATH;
   }
@@ -47,16 +47,16 @@ const DEFAULT_COMPONENT_PATH = '/site/components';
 
 export default function App() {
   const currentPreviewItem = useCurrentPreviewItem();
-  const selectedItem = currentPreviewItem ? StudioAPI.getPreviewItem(currentPreviewItem) : null;
-  const rootDir = getRootDir(selectedItem);
+  const sourceItem = currentPreviewItem ? StudioAPI.getPreviewItem(currentPreviewItem) : null;
+  const rootDir = getRootDir(sourceItem);
 
   return (
     <CrafterThemeProvider>
-      <SelectedItem selectedItem={selectedItem} />
-      <TreeView rootDir={rootDir} />
+      <SourceItemTable sourceItem={sourceItem} />
+      <DirectoryTreeView rootDir={rootDir} />
       <AppActions
         rootDir={rootDir}
-        selectedItem={selectedItem}
+        sourceItem={sourceItem}
       />
     </CrafterThemeProvider>
   );

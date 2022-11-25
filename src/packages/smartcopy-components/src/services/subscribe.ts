@@ -16,8 +16,8 @@
 
 import { Subject } from 'rxjs';
 
-const copyDestSub = new Subject<string>();
+const destinationPathSubscriber = new Subject<string>();
 
 export {
-  copyDestSub,
+  destinationPathSubscriber,
 };

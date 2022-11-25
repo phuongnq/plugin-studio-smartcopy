@@ -14,21 +14,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const HttpHelper = {
+import { get, post } from '@craftercms/studio-ui/utils/ajax';
+
+const HttpUtils = {
   get(url: string): any {
     return new Promise((resolve, reject) => {
-      craftercms.utils.ajax.get(url).subscribe((response) => {
-        resolve(response);
+      get(url).subscribe({
+        next: (response) => {
+          resolve(response);
+        },
+        error(e) {
+          reject(e);
+        }
       });
     });
   },
-  post(url: string, body, headers): any {
+  post(url: string, body?: any, headers?: Headers): any {
     return new Promise((resolve, reject) => {
-      craftercms.utils.ajax.post(url, body, headers).subscribe((response) => {
-        resolve(response);
+      post(url, body, headers).subscribe({
+        next: (response) => {
+          resolve(response);
+        },
+        error(e) {
+          reject(e);
+        }
       });
     });
   }
 };
 
-export default HttpHelper;
+export default HttpUtils;

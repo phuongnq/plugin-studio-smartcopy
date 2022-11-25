@@ -13,26 +13,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
+import useActiveSiteId from '@craftercms/studio-ui/hooks/useActiveSiteId';
+import useEnv from '@craftercms/studio-ui/hooks/useEnv';
 
-import { StyledCancelButton, StyledMainButton } from './StyledButton';
+import StyledActionButton from './StyledButton';
 import StyledDialogComponent from './StyledDialog';
 
 import StudioAPI from '../api/studio';
 
-export default function NewFolderDialog({ open, onClose, path }) {
+export default function NewFolderDialog({ open, onClose, path } : { open: boolean, onClose: (isSuccess: boolean) => void, path: string}) {
+  const siteId = useActiveSiteId();
+  const { authoringBase } = useEnv();
+
   const [folderName, setFolderName] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSubmit = async () => {
     if (folderName && path) {
       setIsProcessing(true);
-      const res = await StudioAPI.createFolder(path, folderName);
+      const res = await StudioAPI.createFolder(authoringBase, siteId, path, folderName);
       setFolderName('');
       onClose(res);
       setIsProcessing(false);
@@ -41,7 +47,7 @@ export default function NewFolderDialog({ open, onClose, path }) {
 
   const handleCancel = () => {
     setFolderName('');
-    onClose();
+    onClose(false);
   };
 
   return (
@@ -69,17 +75,17 @@ export default function NewFolderDialog({ open, onClose, path }) {
           />
         </DialogContent>
         <DialogActions>
-          <StyledCancelButton variant="outlined" color="primary" onClick={handleCancel}>
+          <StyledActionButton variant="outlined" color="primary" onClick={handleCancel}>
             Cancel
-          </StyledCancelButton>
-          <StyledMainButton
+          </StyledActionButton>
+          <StyledActionButton
             variant="contained"
             color="primary"
             onClick={handleSubmit}
             disabled={!folderName || isProcessing}
           >
             Create
-          </StyledMainButton>
+          </StyledActionButton>
         </DialogActions>
       </StyledDialogComponent>
     </div>

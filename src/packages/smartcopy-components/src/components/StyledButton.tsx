@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
@@ -21,10 +22,4 @@ const StyledActionButton = styled(Button)(({ theme }) => ({
   minWidth: '120px',
 }));
 
-const StyledMainButton = styled(StyledActionButton)(({ theme }) => ({
-}));
-
-const StyledCancelButton = styled(StyledActionButton)(({ theme }) => ({
-}));
-
-export { StyledCancelButton, StyledMainButton };
+export default StyledActionButton;

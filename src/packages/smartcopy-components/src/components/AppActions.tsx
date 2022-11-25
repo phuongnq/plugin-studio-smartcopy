@@ -1,75 +1,118 @@
-import React, { useState, forwardRef } from 'react';
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import DialogActions from '@mui/material/DialogActions';
-import MuiAlert, { AlertProps, AlertColor } from '@mui/material/Alert';
-import { closeWidgetDialog } from '@craftercms/studio-ui/state/actions/dialogs';
+/*
+ * Copyright (C) 2007-2022 Crafter Software Corporation. All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import DialogActions from '@mui/material/DialogActions';
+import { closeWidgetDialog } from '@craftercms/studio-ui/state/actions/dialogs';
+import { showSystemNotification } from '@craftercms/studio-ui/state/actions/system';
+import useActiveSiteId from '@craftercms/studio-ui/hooks/useActiveSiteId';
+import useEnv from '@craftercms/studio-ui/hooks/useEnv';
 
-import { StyledCancelButton, StyledMainButton } from './StyledButton';
+import StyledActionButton from './StyledButton';
 
-import StudioAPI, { SelectedItemType } from '../api/studio';
-import { copyDestSub } from '../service/subscribe';
+import StudioAPI, { PreviewItemType } from '../api/studio';
+import { destinationPathSubscriber } from '../services/subscribe';
 
-const ALERT_AUTO_HIDE_DURATION = 4000;
-
-const Alert = forwardRef(function Alert(props: AlertProps, ref: any) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-export default function AppActions({ rootDir, selectedItem } : { rootDir: string, selectedItem?: SelectedItemType}) {
+export default function AppActions({ rootDir, sourceItem } : { rootDir: string, sourceItem?: PreviewItemType}) {
   const dispatch = useDispatch();
-  const [alert, setAlert] = useState<{ open: boolean, severity: AlertColor, message: string}>({ open: false, severity: 'info', message: '' });
-  const [desPath, setDesPath] = useState('');
+  const siteId = useActiveSiteId();
+  const { authoringBase } = useEnv();
+
+  const [destinationPath, setDestinationPath] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  copyDestSub.subscribe((path) => {
-    setDesPath(path);
+  destinationPathSubscriber.subscribe((path) => {
+    setDestinationPath(path);
   });
 
-  const onCloseAlert = () => {
-    setAlert(Object.assign({}, {
-      open: false,
-      severity: alert.severity,
-      message: alert.message,
-    }));
-  };
-
-  const handleCopy = async (event: React.MouseEvent<HTMLElement>, openEditForm: boolean) => {
+  const handleCopy = async (event: React.MouseEvent<HTMLElement>, copyAndEdit: boolean) => {
     event.preventDefault();
 
-    if (isProcessing || !desPath || !selectedItem || !selectedItem.path) {
+    if (isProcessing || !destinationPath || !sourceItem || !sourceItem.path) {
       return;
     }
 
     setIsProcessing(true);
-    const path = selectedItem.path;
-    const destinationPath = desPath;
-    const res = await StudioAPI.copyItem(path, destinationPath);
+    const sourcePath = sourceItem.path;
+    const res = await StudioAPI.copyItem( authoringBase, siteId, sourcePath, destinationPath);
     if (res) {
-      const pastePath = res.items[0];
-      if (openEditForm && pastePath) {
-        StudioAPI.openEditForm(selectedItem.contentType, pastePath);
+      const pastedPath = res.items[0];
+      if (copyAndEdit && pastedPath) {
+        openEditForm(siteId, pastedPath);
       }
     } else {
       setIsProcessing(false);
-      return setAlert({
-        open: true,
-        severity: 'error',
-        message: `There is an error while copying file: ${path}`,
-      });
+      return dispatch(
+        showSystemNotification({
+          message: `There is an error while copying content: ${sourcePath}`
+        })
+      );
     }
 
-    if (!openEditForm) {
-      setAlert({
-        open: true,
-        severity: 'success',
-        message: 'Selected files are copied to destination folder.',
-      });
+    if (!copyAndEdit) {
+      dispatch(
+        showSystemNotification({
+          message: 'Selected files are copied to destination folder.'
+        })
+      );
     }
 
     setIsProcessing(false);
-  }
+  };
+
+  const openEditForm = (siteId: string, path: string) => {
+    return dispatch({
+      type: 'SHOW_EDIT_DIALOG',
+      payload: {
+        site: siteId,
+        path,
+        type: 'form',
+        authoringBase,
+        isHidden: false,
+        onSaveSuccess: {
+          type: 'BATCH_ACTIONS',
+          payload: [
+            {
+              type: 'DISPATCH_DOM_EVENT',
+              payload: { id: 'editDialogSuccess' }
+            },
+            {
+              type: 'SHOW_EDIT_ITEM_SUCCESS_NOTIFICATION'
+            },
+            {
+              type: 'CLOSE_EDIT_DIALOG'
+            }
+          ]
+        },
+        onCancel: {
+          type: 'BATCH_ACTIONS',
+          payload: [
+            {
+              type: 'CLOSE_EDIT_DIALOG'
+            },
+            {
+              type: 'DISPATCH_DOM_EVENT',
+              payload: { id: 'editDialogDismissed' }
+            }
+          ]
+        }
+      }
+    });
+  };
 
   const handleCopyAndOpen = (event: React.MouseEvent<HTMLElement>) => {
     const openEditForm = true;
@@ -84,45 +127,36 @@ export default function AppActions({ rootDir, selectedItem } : { rootDir: string
   };
 
   const resetState = () => {
-    setDesPath('');
+    setDestinationPath('');
     setIsProcessing(false);
   };
 
   return (
-    <>
-      <DialogActions>
-        <StyledCancelButton
-            variant="outlined"
-            color="primary"
-            onClick={(event) => handleClose(event, null)}
-            disabled={isProcessing}
-          >
-            Close
-          </StyledCancelButton>
-          <StyledMainButton
-            variant="contained"
-            color="primary"
-            onClick={(event) => handleCopy(event, false)}
-            disabled={isProcessing || !rootDir || !desPath}
-          >
-            Copy
-          </StyledMainButton>
-          <StyledMainButton
-            variant="contained"
-            color="primary"
-            onClick={handleCopyAndOpen}
-            disabled={isProcessing || !rootDir || !desPath}
-          >
-            Copy and Edit
-          </StyledMainButton>
-      </DialogActions>
-      <Stack spacing={2} sx={{ width: '100%' }}>
-        <Snackbar open={alert && alert.open} autoHideDuration={ALERT_AUTO_HIDE_DURATION} onClose={onCloseAlert}>
-          <Alert onClose={onCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>
-            {alert.message}
-          </Alert>
-        </Snackbar>
-      </Stack>
-    </>
+    <DialogActions>
+      <StyledActionButton
+        variant="outlined"
+        color="primary"
+        onClick={(event) => handleClose(event, null)}
+        disabled={isProcessing}
+      >
+        Close
+      </StyledActionButton>
+      <StyledActionButton
+        variant="contained"
+        color="primary"
+        onClick={(event) => handleCopy(event, false)}
+        disabled={isProcessing || !rootDir || !destinationPath}
+      >
+        Copy
+      </StyledActionButton>
+      <StyledActionButton
+        variant="contained"
+        color="primary"
+        onClick={handleCopyAndOpen}
+        disabled={isProcessing || !rootDir || !destinationPath}
+      >
+        Copy and Edit
+      </StyledActionButton>
+    </DialogActions>
   );
 };

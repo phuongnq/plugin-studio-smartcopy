@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2007-2022 Crafter Software Corporation. All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import React, { useState, useEffect } from 'react';
 import TreeView from '@mui/lab/TreeView';
 import TreeItem from '@mui/lab/TreeItem';
@@ -10,17 +26,23 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
-
 import StyledTableRow from '@mui/material/TableRow';
 import StyledTableCell from '@mui/material/TableCell';
-import ActionMenu from './ActionMenu';
+
+import useActiveSiteId from '@craftercms/studio-ui/hooks/useActiveSiteId';
+import useEnv from '@craftercms/studio-ui/hooks/useEnv';
+
+import RightClickMenu from './RightClickMenu';
 import NewFolderDialog from './NewFolderDialog';
 import RenameFolderDialog from './RenameFolderDialog';
 
 import StudioAPI from '../api/studio';
-import { copyDestSub } from '../service/subscribe';
+import { destinationPathSubscriber } from '../services/subscribe';
 
-export default function FileSystemNavigator({ rootDir }) {
+export default function DirectoryTreeView({ rootDir } : { rootDir: string }) {
+  const siteId = useActiveSiteId();
+  const { authoringBase } = useEnv();
+
   const [nodes, setNodes] = useState({});
   const [expanded, setExpanded] = useState([]);
   const [selected, setSelected] = useState('');
@@ -75,7 +97,7 @@ export default function FileSystemNavigator({ rootDir }) {
 
   const handleSelect = async (event, nodeId: string) => {
     setSelected(nodeId);
-    copyDestSub.next(nodeId);
+    destinationPathSubscriber.next(nodeId);
     fetchChildNodes(nodeId, false);
   };
 
@@ -94,7 +116,7 @@ export default function FileSystemNavigator({ rootDir }) {
     }
 
     // Get children of node from API then append to nodes object
-    const items = await StudioAPI.getChildrenPaths(nodeId);
+    const items = await StudioAPI.getChildrenPaths(authoringBase, siteId, nodeId);
     const childNodes = items.map((item) => ({
       id: item,
       name: item.split('/').pop(),
@@ -108,7 +130,7 @@ export default function FileSystemNavigator({ rootDir }) {
 
   useEffect(() => {
     (async function () {
-      const items = await StudioAPI.getChildrenPaths(rootDir);
+      const items = await StudioAPI.getChildrenPaths(authoringBase, siteId, rootDir);
       const childNodes = items.map((item) => ({
         id: item,
         name: item.split('/').pop(),
@@ -161,14 +183,14 @@ export default function FileSystemNavigator({ rootDir }) {
     });
   };
 
-  const onCreateFolderClose = (isSuccess) => {
+  const onCreateFolderClose = (isSuccess: boolean) => {
     if (isSuccess) {
       fetchChildNodes(rightClickPosition.path, true);
     }
     setNewFolderDialogOpen(false);
   };
 
-  const onRenameFolderClose = (isSuccess) => {
+  const onRenameFolderClose = (isSuccess: boolean) => {
     if (isSuccess) {
       const parentNodeId = rightClickPosition.path.split('/').slice(0, -1).join('/');
       fetchChildNodes(parentNodeId, true);
@@ -207,7 +229,7 @@ export default function FileSystemNavigator({ rootDir }) {
         >
           {renderTree(nodes)}
         </TreeView>
-        <ActionMenu
+        <RightClickMenu
           anchorEl={rightClickAnchorEl}
           onMenuClose={() => {
             setRightClickAnchorEl(null)
@@ -231,4 +253,4 @@ export default function FileSystemNavigator({ rootDir }) {
       <RenameFolderDialog open={renameFolderDialogOpen} onClose={onRenameFolderClose} path={rightClickPosition.path} />
     </>
   );
-}
+};
