@@ -18,6 +18,4 @@ import { Subject } from 'rxjs';
 
 const destinationPathSubscriber = new Subject<string>();
 
-export {
-  destinationPathSubscriber,
-};
+export { destinationPathSubscriber };

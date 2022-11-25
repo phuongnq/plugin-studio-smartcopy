@@ -28,11 +28,11 @@ export type PreviewItemType = {
 };
 
 const StudioAPI = {
-  getPreviewItem: function(previewItem): PreviewItemType {
+  getPreviewItem: function (previewItem): PreviewItemType {
     return {
       name: previewItem.label,
       path: previewItem.path,
-      contentType: previewItem.contentTypeId,
+      contentType: previewItem.contentTypeId
     };
   },
   async getChildrenPaths(authoringBase: string, siteId: string, path: string) {
@@ -41,9 +41,11 @@ const StudioAPI = {
       const res = await HttpUtils.get(url);
 
       if (res.status === 200) {
-        return res.response.item.children.filter(child => child.path !== path).map(child => {
-          return child.path;
-        });
+        return res.response.item.children
+          .filter((child) => child.path !== path)
+          .map((child) => {
+            return child.path;
+          });
       }
       return [];
     } catch (e) {
@@ -57,7 +59,7 @@ const StudioAPI = {
       operation: 'COPY',
       targetPath: destinationPath,
       item: {
-        path,
+        path
       }
     };
 

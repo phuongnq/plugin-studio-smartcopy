@@ -25,41 +25,44 @@ import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutl
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import { styled, alpha } from '@mui/material/styles';
 
-const StyledMenu = styled((props: any) => (
-  <Popper
-    {...props}
-  />
-))(({ theme }) => ({
+const StyledMenu = styled((props: any) => <Popper {...props} />)(({ theme }) => ({
   '& .MuiPaper-root': {
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 180,
-    color:
-      theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+    color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
     boxShadow:
       'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
     '& .MuiMenu-list': {
-      padding: '4px 0',
+      padding: '4px 0'
     },
     '& .MuiMenuItem-root': {
       '& .MuiSvgIcon-root': {
         fontSize: 18,
         color: theme.palette.text.secondary,
-        marginRight: theme.spacing(1.5),
+        marginRight: theme.spacing(1.5)
       },
       '&:active': {
-        backgroundColor: alpha(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity,
-        ),
-      },
-    },
-  },
+        backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity)
+      }
+    }
+  }
 }));
 
-export default function RightClickMenu({ anchorEl, position, onMenuClose, onCreateFolder, onRenameFolder, onContextMenu } : {
-  anchorEl: any, position: any, onMenuClose: () => void, onCreateFolder: (() => void),
-  onRenameFolder: (() => void), onContextMenu: ((event: React.MouseEvent<HTMLElement>) => void)
+export default function RightClickMenu({
+  anchorEl,
+  position,
+  onMenuClose,
+  onCreateFolder,
+  onRenameFolder,
+  onContextMenu
+}: {
+  anchorEl: any;
+  position: any;
+  onMenuClose: () => void;
+  onCreateFolder: () => void;
+  onRenameFolder: () => void;
+  onContextMenu: (event: React.MouseEvent<HTMLElement>) => void;
 }) {
   const open = Boolean(anchorEl);
   const { pageX, pageY } = position;
@@ -82,16 +85,17 @@ export default function RightClickMenu({ anchorEl, position, onMenuClose, onCrea
     <div>
       <StyledMenu
         anchorEl={{
-          getBoundingClientRect: () => ({
-            x: pageX,
-            y: pageY,
-            width: 0,
-            height: 0,
-            top: pageY,
-            right: pageX,
-            bottom: pageY,
-            left: pageX
-          } as DOMRect)
+          getBoundingClientRect: () =>
+            ({
+              x: pageX,
+              y: pageY,
+              width: 0,
+              height: 0,
+              top: pageY,
+              right: pageX,
+              bottom: pageY,
+              left: pageX
+            } as DOMRect)
         }}
         open={open}
         onClose={onMenuClose}
@@ -101,36 +105,35 @@ export default function RightClickMenu({ anchorEl, position, onMenuClose, onCrea
         transition
         disablePortal
       >
-         {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin:
-                  placement === 'bottom-start' ? 'left top' : 'left bottom',
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
-                    autoFocusItem={open}
-                    id="composition-menu"
-                    aria-labelledby="composition-button"
-                    onKeyDown={handleKeyDown}
-                  >
-                    <MenuItem onClick={onCreateFolder} disableRipple>
-                      <CreateNewFolderOutlinedIcon />
-                      Create new folder
-                    </MenuItem>
-                    <MenuItem onClick={onRenameFolder} disableRipple>
-                      <BorderColorOutlinedIcon />
-                      Rename
-                    </MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom'
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList
+                  autoFocusItem={open}
+                  id="composition-menu"
+                  aria-labelledby="composition-button"
+                  onKeyDown={handleKeyDown}
+                >
+                  <MenuItem onClick={onCreateFolder} disableRipple>
+                    <CreateNewFolderOutlinedIcon />
+                    Create new folder
+                  </MenuItem>
+                  <MenuItem onClick={onRenameFolder} disableRipple>
+                    <BorderColorOutlinedIcon />
+                    Rename
+                  </MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
       </StyledMenu>
     </div>
   );
-};
+}

@@ -31,7 +31,7 @@ const createData = (name: string, path: string) => {
   return { name, path };
 };
 
-const SourceItemTable = ({ sourceItem }: { sourceItem: PreviewItemType}) => {
+const SourceItemTable = ({ sourceItem }: { sourceItem: PreviewItemType }) => {
   const row = sourceItem ? createData(sourceItem.name, sourceItem.path) : null;
 
   return (
@@ -60,6 +60,6 @@ const SourceItemTable = ({ sourceItem }: { sourceItem: PreviewItemType}) => {
       </Grid>
     </>
   );
-}
+};
 
 export default SourceItemTable;

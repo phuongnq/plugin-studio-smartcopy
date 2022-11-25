@@ -33,7 +33,7 @@ const DEFAULT_COMPONENT_PATH = '/site/components';
  * Default: /site
  * @returns root directory
  */
-  const getRootDir = (item: PreviewItemType) => {
+const getRootDir = (item: PreviewItemType) => {
   if (item && item.path && item.path.startsWith(DEFAULT_WEBSITE_PATH)) {
     return DEFAULT_WEBSITE_PATH;
   }
@@ -54,10 +54,7 @@ export default function App() {
     <CrafterThemeProvider>
       <SourceItemTable sourceItem={sourceItem} />
       <DirectoryTreeView rootDir={rootDir} />
-      <AppActions
-        rootDir={rootDir}
-        sourceItem={sourceItem}
-      />
+      <AppActions rootDir={rootDir} sourceItem={sourceItem} />
     </CrafterThemeProvider>
   );
 }

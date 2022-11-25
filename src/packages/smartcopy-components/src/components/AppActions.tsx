@@ -27,7 +27,7 @@ import StyledActionButton from './StyledButton';
 import StudioAPI, { PreviewItemType } from '../api/studio';
 import { destinationPathSubscriber } from '../services/subscribe';
 
-export default function AppActions({ rootDir, sourceItem } : { rootDir: string, sourceItem?: PreviewItemType}) {
+export default function AppActions({ rootDir, sourceItem }: { rootDir: string; sourceItem?: PreviewItemType }) {
   const dispatch = useDispatch();
   const siteId = useActiveSiteId();
   const { authoringBase } = useEnv();
@@ -48,7 +48,7 @@ export default function AppActions({ rootDir, sourceItem } : { rootDir: string, 
 
     setIsProcessing(true);
     const sourcePath = sourceItem.path;
-    const res = await StudioAPI.copyItem( authoringBase, siteId, sourcePath, destinationPath);
+    const res = await StudioAPI.copyItem(authoringBase, siteId, sourcePath, destinationPath);
     if (res) {
       const pastedPath = res.items[0];
       if (copyAndEdit && pastedPath) {
@@ -159,4 +159,4 @@ export default function AppActions({ rootDir, sourceItem } : { rootDir: string, 
       </StyledActionButton>
     </DialogActions>
   );
-};
+}

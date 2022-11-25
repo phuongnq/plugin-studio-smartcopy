@@ -39,7 +39,7 @@ import RenameFolderDialog from './RenameFolderDialog';
 import StudioAPI from '../api/studio';
 import { destinationPathSubscriber } from '../services/subscribe';
 
-export default function DirectoryTreeView({ rootDir } : { rootDir: string }) {
+export default function DirectoryTreeView({ rootDir }: { rootDir: string }) {
   const siteId = useActiveSiteId();
   const { authoringBase } = useEnv();
 
@@ -47,7 +47,7 @@ export default function DirectoryTreeView({ rootDir } : { rootDir: string }) {
   const [expanded, setExpanded] = useState([]);
   const [selected, setSelected] = useState('');
   const [rightClickAnchorEl, setRightClickAnchorEl] = useState(null);
-  const [rightClickPosition, setRightClickPosition] = useState<{ path?: string, pageX?: number, pageY?: number}>({});
+  const [rightClickPosition, setRightClickPosition] = useState<{ path?: string; pageX?: number; pageY?: number }>({});
   const [newFolderDialogOpen, setNewFolderDialogOpen] = useState(false);
   const [renameFolderDialogOpen, setRenameFolderDialogOpen] = useState(false);
 
@@ -80,7 +80,7 @@ export default function DirectoryTreeView({ rootDir } : { rootDir: string }) {
       }
     }
 
-    let foundNode : any = {};
+    let foundNode: any = {};
     // go throush each path from root to the last child node
     while (fullPaths.length > 0) {
       const currPath = fullPaths.shift();
@@ -152,7 +152,7 @@ export default function DirectoryTreeView({ rootDir } : { rootDir: string }) {
    */
   const renderTree = (nodes) => {
     if (!nodes.id) {
-      return (<TreeItem nodeId="empty-tree"></TreeItem>);
+      return <TreeItem nodeId="empty-tree"></TreeItem>;
     }
 
     return (
@@ -225,14 +225,19 @@ export default function DirectoryTreeView({ rootDir } : { rootDir: string }) {
           selected={selected}
           onNodeToggle={handleToggle}
           onNodeSelect={handleSelect}
-          sx={{ height: 'calc(90vh - 64px - 1px - 140px - 110px - 30px - 64px - 15px)', flexGrow: 1, maxWidth: '100%', overflowY: 'auto' }}
+          sx={{
+            height: 'calc(90vh - 64px - 1px - 140px - 110px - 30px - 64px - 15px)',
+            flexGrow: 1,
+            maxWidth: '100%',
+            overflowY: 'auto'
+          }}
         >
           {renderTree(nodes)}
         </TreeView>
         <RightClickMenu
           anchorEl={rightClickAnchorEl}
           onMenuClose={() => {
-            setRightClickAnchorEl(null)
+            setRightClickAnchorEl(null);
           }}
           position={rightClickPosition}
           onCreateFolder={() => {
@@ -253,4 +258,4 @@ export default function DirectoryTreeView({ rootDir } : { rootDir: string }) {
       <RenameFolderDialog open={renameFolderDialogOpen} onClose={onRenameFolderClose} path={rightClickPosition.path} />
     </>
   );
-};
+}

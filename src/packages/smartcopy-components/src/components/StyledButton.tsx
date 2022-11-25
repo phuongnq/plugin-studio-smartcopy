@@ -19,7 +19,7 @@ import { styled } from '@mui/material/styles';
 
 const StyledActionButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
-  minWidth: '120px',
+  minWidth: '120px'
 }));
 
 export default StyledActionButton;

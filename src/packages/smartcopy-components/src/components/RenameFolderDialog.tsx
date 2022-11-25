@@ -28,7 +28,15 @@ import StyledDialogComponent from './StyledDialog';
 
 import StudioAPI from '../api/studio';
 
-export default function RenameFolderDialog({ open, onClose, path } : { open: boolean, onClose: (isSuccess: boolean) => void, path: string }) {
+export default function RenameFolderDialog({
+  open,
+  onClose,
+  path
+}: {
+  open: boolean;
+  onClose: (isSuccess: boolean) => void;
+  path: string;
+}) {
   const siteId = useActiveSiteId();
   const { authoringBase } = useEnv();
 
@@ -94,4 +102,4 @@ export default function RenameFolderDialog({ open, onClose, path } : { open: boo
       </StyledDialogComponent>
     </>
   );
-};
+}

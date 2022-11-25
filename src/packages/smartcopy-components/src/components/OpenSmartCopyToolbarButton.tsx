@@ -15,14 +15,15 @@
  */
 
 import * as React from 'react';
-import ContentPasteOutlined from '@mui/icons-material/ContentPasteOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
+import SystemIcon, { SystemIconDescriptor } from '@craftercms/studio-ui/components/SystemIcon';
 import { showWidgetDialog } from '@craftercms/studio-ui/state/actions/dialogs';
 import { useDispatch } from 'react-redux';
 
 export function OpenSmartCopyToolbarButton(props) {
   const buttonLabel = props.title ? props.title : 'Smart Copy';
+  const buttonIcon = props.icon && props.icon.id ? props.icon.id : '@mui/icons-material/ContentPasteOutlined';
 
   const dispatch = useDispatch();
   return (
@@ -41,7 +42,7 @@ export function OpenSmartCopyToolbarButton(props) {
           )
         }
       >
-        <ContentPasteOutlined />
+        <SystemIcon icon={{ id: buttonIcon }} fontIconProps={{ fontSize: 'small' }} />
       </IconButton>
     </Tooltip>
   );
