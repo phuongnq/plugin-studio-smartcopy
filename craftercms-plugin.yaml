@@ -100,3 +100,22 @@ plugin:
                   value: smartcopy
                 - name: file
                   value: index.js
+    - type: form-control
+      elementXpath: //control/plugin[pluginId='org.rd.plugin.smartcopy']
+      element:
+        name: control
+        children:
+          - name: plugin
+            children:
+              - name: pluginId
+                value: org.rd.plugin.smartcopy
+              - name: type
+                value: control
+              - name: name
+                value: custom-locale
+              - name: filename
+                value: main.js
+          - name: icon
+            children:
+              - name: class
+                value: fa-language
