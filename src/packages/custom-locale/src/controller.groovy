@@ -57,14 +57,41 @@ class LocaleFieldsOnCopyContentTypeHook {
         def sourceLocaleCodeElem = rootElem.selectSingleNode("sourceLocaleCode_s")
         def localeSourceIdElem = rootElem.selectSingleNode("localeSourceId_s")
         def pathLocaleCode = getLocaleFromPath(path)
+        def originLocaleCode = localeCodeElem.text
 
-        if (localeCodeElem && localeCodeElem.text) {
-            if (localeCodeElem.text != pathLocaleCode) {
+        if (localeCodeElem && originLocaleCode) {
+            if (originLocaleCode != pathLocaleCode) {
                 // If the locale is different, update the locale code, and keep the locale source ID
                 log.info("Original locale code ({}) is different from current locale code in path ({}). " +
-                         "Updating the locale field", localeCodeElem.text, pathLocaleCode)
+                         "Updating the locale field.", originLocaleCode, pathLocaleCode)
 
                 updateElement("localeCode_s", pathLocaleCode, localeCodeElem, rootElem)
+
+                // update shared component link to the new locale if component exists in the new locale
+                def sharedComponents = rootElem.selectNodes('//*[@item-list="true"]')
+                sharedComponents.each { element ->
+                    def items = element.elements('item')
+                    items.each { itemElm ->
+                        if (itemElm.attributeValue('inline')) {
+                            // item is not a shared component
+                            return
+                        }
+
+                        ['key', 'include'].each { elementName ->
+                            def replaceElm = itemElm.element(elementName)
+                            def isSharedComponent = replaceElm && replaceElm.text && replaceElm.text.startsWith('/site/') && replaceElm.text.endsWith('.xml')
+                            if (isSharedComponent) {
+                                def newPath = replaceElm.text.replace("/${originLocaleCode}/", "/${pathLocaleCode}/")
+                                def contentExists = contentService.contentExists(site, newPath)
+                                if (contentExists) {
+                                    log.info("Shared component ({}) exists for the element ({}). " +
+                                             "Updating the link.", newPath, "${element.getName()}.${itemElm.getName()}.${elementName}")
+                                    updateElement(elementName, newPath, replaceElm, rootElem)
+                                }
+                            }
+                        }
+                    }
+                }
             } else {
                 // If the locale is the same, create a new locale source ID
                 log.info("Original locale code ({}) is the same as current locale code in path ({}). " +
