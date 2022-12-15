@@ -14,9 +14,9 @@ Install the plugin via Studio's Plugin Management UI under `Site Tools` > `Plugi
               name="smartcopy"
               file="index.js"/>
      <configuration>
-         <title>Copy for Translation</title> 
+         <title>Copy for Translation</title>
          <icon id="@mui/icons-material/TranslateRounded"/>
-     </configuration>                
+     </configuration>
   </widget>
 ```
 
@@ -30,9 +30,22 @@ Install the plugin via Studio's Plugin Management UI under `Site Tools` > `Plugi
                file="index.js"/>
         <!-- optional parameters -->
         <configuration>
-            <title>Copy for Translation</title> 
+            <title>Copy for Translation</title>
             <icon id="@mui/icons-material/TranslateRounded"/>
-        </configuration>                
-    </widget>               
+        </configuration>
+    </widget>
 ```
-
+# Custom Locale Configuration (`site-config-tools.xml`)
+```
+    <control>
+        <plugin>
+            <pluginId>org.rd.plugin</pluginId>
+            <type>control</type>
+            <name>custom-locale</name>
+            <filename>main.js</filename>
+        </plugin>
+        <icon>
+            <class>fa-language</class>
+        </icon>
+    </control>
+```

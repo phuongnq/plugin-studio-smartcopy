@@ -52,15 +52,14 @@
       {locale && locale.localeCode && locale.sourceLocaleCode && locale.localeCode !== locale.sourceLocaleCode && (
         <>
           <button
-            style={{
-              float: 'right',
-              color: '#fff',
-              backgroundColor: '#7e9dbb',
-              border: '1px solid transparent',
-              borderColor: '#6d90b2',
-              minWidth: '72px',
-            }}
+            className="btn btn-default btn-sm edit-position"
             onClick={() => { setIsDialogOpen(true); }}
+            style={{
+              padding: '1px 5px',
+              marginLeft: '5px',
+              display: 'inline',
+              float: 'right'
+            }}
           >
             Unlink
           </button>
@@ -70,7 +69,7 @@
               onOk={onConfirmOk}
               onCancel={() => { setIsDialogOpen(false) }}
               onClose={() => { setIsDialogOpen(false) }}
-              description={"Warning: By unlinking this content you are indicating that this object has no localization relationships to any other objects in the system. Do you wish to continue?"}
+              body={"Warning: By unlinking this content you are indicating that this object has no localization relationships to any other objects in the system. Do you wish to continue?"}
               title={"Unlink"}
               disableEnforceFocus={false}
             />
@@ -103,13 +102,13 @@
       return 'Custom Locale Control';
     },
     /**
-     * List of valid custom locale codes for Pokemon
+     * List of valid custom locale codes
      */
     _getLocaleList: function () {
       return ['us', 'uk', 'de', 'es', 'fr', 'it', 'dk', 'fi', 'nl', 'no', 'ru', 'se', 'br', 'el', 'jp'];
     },
     /**
-     * Get locale code from a site path. Ex: /site/us/content/pokemon/pikachu.html => us
+     * Get locale code from a site path. Ex: /site/website/us/content/sample-content/index.xml => us
      * @param {*} path
      * @returns
      */

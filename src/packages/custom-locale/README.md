@@ -14,12 +14,7 @@ yarn build
 
 ## Install plugin
 
-After the build step above, run following commands to commit update to sandbox:
-
-```
-git add ../../config/studio/plugins/control/custom-locale/main.js
-git commit -m "Update custom locale plugin"
-```
+Install the plugin via Studio's Plugin Management UI under `Site Tools` > `Plugin Management`.
 
 ## Add required fields to content types
 
@@ -42,3 +37,7 @@ git commit -m "Update custom locale plugin"
 * Add Custom Locale control
 
   * Variable: localeSourceId_s
+
+## Update content type `controller.groovy`
+
+Copy `src/controller.groovy`

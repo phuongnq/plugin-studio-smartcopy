@@ -4,7 +4,7 @@
   "description": "Custom Locale Plugin",
   "main": "main.js",
   "scripts": {
-    "build": "rollup -c",
+    "dist": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

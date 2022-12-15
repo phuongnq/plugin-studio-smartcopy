@@ -68,7 +68,7 @@ export default [
     output: {
       sourcemap: 'inline',
       name: 'studioPluginCustomLocale',
-      file: '../../config/studio/plugins/control/custom-locale/main.js',
+      file: '../../../authoring/static-assets/plugins/org/rd/plugin/smartcopy/control/custom-locale/main.js',
       format: 'iife',
       globals
     },
