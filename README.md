@@ -1,9 +1,33 @@
 # SmartCopy Plugin for CrafterCMS
 
-
+- The Smart Copy plugin adds the following copy behaviors to the system:
+  - Locale / translation behaviors: 
+    - A dialog that makes it easy to copy content from one locale to another
+    - Form controls that track the lineage or source ID of the content copied from one item to another
+    - A controller that updates the locale of references to child content objects if they exist in the destination location.
+ - Anbility to place a shortcut for the copy behavior in the sidebar and top navigation of studio
+ - Ability to re-badge/icon  and re-label the smart copy shortcuts
+ 
 # Installation
 
-Install the plugin via Studio's Plugin Management UI under `Site Tools` > `Plugin Management`.
+1. Install the plugin via Studio's Plugin Management UI under `Site Tools` > `Plugin Management`.
+2. Copy or incorporate `src/packages/custom-locale/src/controller.groovy into each content type you want to use smart copy on (this controller exectures on copy command and will update paths and metadata like locales.
+3. Add the following felds to your content types:
+ - Control type: Custom Locale Control 
+   - Title: Locale Source ID
+   - Variable Name: localeSourceId_s
+ - Control type: Input
+   - Title: Locale Code
+   - Variable Name: localeCode_s
+   - Readonly: true
+   - Display Size: 50
+   - Max Lenght: 50
+ - Control type: Input
+   - Title: Source Locale Code
+   - Variable Name: sourceLocaleCode_s
+   - Readonly: true
+   - Display Size: 50
+   - Max Lenght: 50
 
 # Toolbar Optional Configuration (`ui.xml`)
 ```
