@@ -4,14 +4,14 @@
   - Locale / translation behaviors: 
     - A dialog that makes it easy to copy content from one locale to another
     - Form controls that track the lineage or source ID of the content copied from one item to another
-    - A controller that updates the locale of references to child content objects if they exist in the destination location.
- - Anbility to place a shortcut for the copy behavior in the sidebar and top navigation of studio
- - Ability to re-badge/icon  and re-label the smart copy shortcuts
+    - A controller that updates the locale of references to child content objects if they exist in the destination location
+ - Anbility to place a shortcut for the copy behavior in the sidebar and top navigation of Studio
+ - Ability to re-badge/icon  and re-label the Smart Copy shortcuts
  
 # Installation
 
 1. Install the plugin via Studio's Plugin Management UI under `Site Tools` > `Plugin Management`.
-2. Copy or incorporate `src/packages/custom-locale/src/controller.groovy into each content type you want to use smart copy on (this controller exectures on copy command and will update paths and metadata like locales.
+2. Copy or incorporate `src/packages/custom-locale/src/controller.groovy` into each content type you want to use smart copy on (this controller exectures on copy command and will update paths and metadata like locales.
 3. Add the following felds to your content types:
  - Control type: Custom Locale Control 
    - Title: Locale Source ID
