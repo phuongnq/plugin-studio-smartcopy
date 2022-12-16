@@ -15,16 +15,16 @@
 3. Add the following felds to your content types:
  - Control type: Custom Locale Control 
    - Title: Locale Source ID
-   - Variable Name: localeSourceId_s
+   - Variable Name: `localeSourceId_s`
  - Control type: Input
    - Title: Locale Code
-   - Variable Name: localeCode_s
+   - Variable Name: `localeCode_s`
    - Readonly: true
    - Display Size: 50
    - Max Lenght: 50
  - Control type: Input
    - Title: Source Locale Code
-   - Variable Name: sourceLocaleCode_s
+   - Variable Name: `sourceLocaleCode_s`
    - Readonly: true
    - Display Size: 50
    - Max Lenght: 50
