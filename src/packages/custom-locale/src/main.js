@@ -105,7 +105,7 @@
      * List of valid custom locale codes
      */
     _getLocaleList: function () {
-      return ['us', 'uk', 'de', 'es', 'fr', 'it', 'dk', 'fi', 'nl', 'no', 'ru', 'se', 'br', 'el', 'jp'];
+      return ['en', 'us', 'uk', 'de', 'es', 'fr', 'it', 'dk', 'fi', 'nl', 'no', 'ru', 'se', 'br', 'el', 'jp'];
     },
     /**
      * Get locale code from a site path. Ex: /site/website/us/content/sample-content/index.xml => us

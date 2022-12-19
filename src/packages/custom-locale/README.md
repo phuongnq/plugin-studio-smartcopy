@@ -7,9 +7,8 @@ To update, modify `src/main.js` file.
 ## Build source code
 
 ```
-cd sources/custom-locale
 yarn
-yarn build
+yarn dist
 ```
 
 ## Install plugin
@@ -40,4 +39,4 @@ Install the plugin via Studio's Plugin Management UI under `Site Tools` > `Plugi
 
 ## Update content type `controller.groovy`
 
-Copy `src/controller.groovy`
+Copy `src/controller.groovy` to a content type controller.
