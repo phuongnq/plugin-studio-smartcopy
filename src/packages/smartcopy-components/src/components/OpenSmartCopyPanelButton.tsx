@@ -20,22 +20,21 @@ import { showWidgetDialog } from '@craftercms/studio-ui/state/actions/dialogs';
 import { useDispatch } from 'react-redux';
 
 export function OpenSmartCopyPanelButton(props) {
-  const buttonLabel = props.title ? props.title : 'Smart Copy';
-  const buttonIcon = props.icon && props.icon.id ? props.icon.id : '@mui/icons-material/ContentPasteOutlined';
-
   const dispatch = useDispatch();
+  const {
+    title = 'Smart Copy',
+    icon = { id: '@mui/icons-material/ContentPasteOutlined' }
+  } = props;
   return (
     <ToolsPanelListItemButton
-      icon={{ id: buttonIcon }}
-      title={buttonLabel}
+      icon={icon}
+      title={title}
       onClick={() =>
         dispatch(
           showWidgetDialog({
-            title: buttonLabel,
+            title,
             extraProps: props,
-            widget: {
-              id: 'org.rd.plugin.smartcopy.dialog'
-            }
+            widget: { id: 'org.rd.plugin.smartcopy.dialog' }
           })
         )
       }

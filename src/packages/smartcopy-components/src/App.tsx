@@ -49,12 +49,11 @@ export default function App() {
   const currentPreviewItem = useCurrentPreviewItem();
   const sourceItem = currentPreviewItem ? StudioAPI.getPreviewItem(currentPreviewItem) : null;
   const rootDir = getRootDir(sourceItem);
-
   return (
-    <CrafterThemeProvider>
+    <>
       <SourceItemTable sourceItem={sourceItem} />
       <DirectoryTreeView rootDir={rootDir} />
       <AppActions rootDir={rootDir} sourceItem={sourceItem} />
-    </CrafterThemeProvider>
+    </>
   );
 }

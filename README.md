@@ -30,7 +30,7 @@
    - Max Lenght: 50
 
 # Toolbar Optional Configuration (`ui.xml`)
-```
+```xml
   <widget id="org.rd.plugin.smartcopy.openSmartCopyToolbarButton">
       <plugin id="org.rd.plugin.smartcopy"
               site="{site}"
@@ -45,7 +45,7 @@
 ```
 
 # Sidebar Optional Configuration (`ui.xml`)
-```
+```xml
     <widget id="org.rd.plugin.smartcopy.openSmartCopyPanelButton">
        <plugin id="org.rd.plugin.smartcopy"
                site="{site}"
@@ -60,7 +60,7 @@
     </widget>
 ```
 # Custom Locale Configuration (`site-config-tools.xml`)
-```
+```xml
     <control>
         <plugin>
             <pluginId>org.rd.plugin</pluginId>

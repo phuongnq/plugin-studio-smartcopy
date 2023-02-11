@@ -17,34 +17,42 @@
 import * as React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
-import SystemIcon, { SystemIconDescriptor } from '@craftercms/studio-ui/components/SystemIcon';
+import SystemIcon from '@craftercms/studio-ui/components/SystemIcon';
 import { showWidgetDialog } from '@craftercms/studio-ui/state/actions/dialogs';
 import { useDispatch } from 'react-redux';
+import { Button } from '@mui/material';
 
 export function OpenSmartCopyToolbarButton(props) {
-  const buttonLabel = props.title ? props.title : 'Smart Copy';
-  const buttonIcon = props.icon && props.icon.id ? props.icon.id : '@mui/icons-material/ContentPasteOutlined';
-
   const dispatch = useDispatch();
-  return (
-    <Tooltip title={buttonLabel}>
-      <IconButton
-        size="large"
-        onClick={() =>
-          dispatch(
-            showWidgetDialog({
-              title: buttonLabel,
-              extraProps: props,
-              widget: {
-                id: 'org.rd.plugin.smartcopy.dialog'
-              }
-            })
-          )
-        }
-      >
-        <SystemIcon icon={{ id: buttonIcon }} fontIconProps={{ fontSize: 'small' }} />
+  const {
+    title = 'Smart Copy',
+    tooltip = title,
+    useIcon = true,
+    buttonSize = 'small',
+    dialogTitle = title,
+    icon = { id: '@mui/icons-material/ContentPasteOutlined' }
+  } = props;
+  const handleClick = () =>
+    dispatch(
+      showWidgetDialog({
+        title: dialogTitle,
+        extraProps: props,
+        widget: { id: 'org.rd.plugin.smartcopy.dialog' }
+      })
+    );
+  const applyTooltip = (thing) => {
+    return useIcon || props.tooltip ? <Tooltip title={tooltip}>{thing}</Tooltip> : thing;
+  };
+  return applyTooltip(
+    useIcon ? (
+      <IconButton size={buttonSize} onClick={handleClick}>
+        <SystemIcon icon={icon} />
       </IconButton>
-    </Tooltip>
+    ) : (
+      <Button size={buttonSize} onClick={handleClick}>
+        {title}
+      </Button>
+    )
   );
 }
 

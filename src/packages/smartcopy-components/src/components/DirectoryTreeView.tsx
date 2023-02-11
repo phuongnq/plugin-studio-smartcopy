@@ -211,29 +211,28 @@ export default function DirectoryTreeView({ rootDir }: { rootDir: string }) {
             <TableBody>
               <StyledTableRow key={selected ? selected : 'root'}>
                 <StyledTableCell component="th" scope="row">
-                  {selected ? selected : 'Select a destination path'}
+                  <TreeView
+                    defaultCollapseIcon={<ExpandMoreOutlinedIcon />}
+                    defaultExpandIcon={<ChevronRightOutlinedIcon />}
+                    defaultExpanded={[rootDir]}
+                    expanded={expanded}
+                    selected={selected}
+                    onNodeToggle={handleToggle}
+                    onNodeSelect={handleSelect}
+                    sx={{
+                      height: 'calc(90vh - 64px - 1px - 140px - 110px - 30px - 64px - 15px)',
+                      flexGrow: 1,
+                      maxWidth: '100%',
+                      overflowY: 'auto'
+                    }}
+                  >
+                    {renderTree(nodes)}
+                  </TreeView>
                 </StyledTableCell>
               </StyledTableRow>
             </TableBody>
           </Table>
         </TableContainer>
-        <TreeView
-          defaultCollapseIcon={<ExpandMoreOutlinedIcon />}
-          defaultExpandIcon={<ChevronRightOutlinedIcon />}
-          defaultExpanded={[rootDir]}
-          expanded={expanded}
-          selected={selected}
-          onNodeToggle={handleToggle}
-          onNodeSelect={handleSelect}
-          sx={{
-            height: 'calc(90vh - 64px - 1px - 140px - 110px - 30px - 64px - 15px)',
-            flexGrow: 1,
-            maxWidth: '100%',
-            overflowY: 'auto'
-          }}
-        >
-          {renderTree(nodes)}
-        </TreeView>
         <RightClickMenu
           anchorEl={rightClickAnchorEl}
           onMenuClose={() => {
