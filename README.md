@@ -31,17 +31,23 @@
 
 # Toolbar Optional Configuration (`ui.xml`)
 ```xml
-  <widget id="org.rd.plugin.smartcopy.openSmartCopyToolbarButton">
-      <plugin id="org.rd.plugin.smartcopy"
-              site="{site}"
-              type="apps"
-              name="smartcopy"
-              file="index.js"/>
-     <configuration>
-         <title>Copy for Translation</title>
-         <icon id="@mui/icons-material/TranslateRounded"/>
-     </configuration>
-  </widget>
+<widget id="org.rd.plugin.smartcopy.openSmartCopyToolbarButton">
+	<plugin
+		id="org.rd.plugin.smartcopy"
+		site="{site}"
+		type="apps"
+		name="smartcopy"
+		file="index.js"
+	/>
+	<configuration>
+		<title>Copy</title><!-- The text on the button and/or tooltip -->
+		<tooltip>Smart Copy</tooltip><!-- Optional. Defaults to the value of `title`. Text for the tooltip. -->
+		<useIcon>false</useIcon><!-- Optional. Use an icon button (no text, tooltip only) -->
+		<useIconWithText>true</useIconWithText><!-- Optional. Use a button with text and icon -->
+        <dialogTitle>Smart Copy</dialogTitle><!-- Optional. Defaults to title. The title for the dialog that the button opens. -->
+		<icon id="@mui/icons-material/TranslateRounded"/>
+	</configuration>
+</widget>
 ```
 
 # Sidebar Optional Configuration (`ui.xml`)

@@ -20,18 +20,23 @@ import IconButton from '@mui/material/IconButton';
 import SystemIcon from '@craftercms/studio-ui/components/SystemIcon';
 import { showWidgetDialog } from '@craftercms/studio-ui/state/actions/dialogs';
 import { useDispatch } from 'react-redux';
-import { Button } from '@mui/material';
+import { Button, buttonClasses } from '@mui/material';
 
 export function OpenSmartCopyToolbarButton(props) {
   const dispatch = useDispatch();
-  const {
+  let {
     title = 'Smart Copy',
     tooltip = title,
     useIcon = true,
+    useIconWithText = false,
     buttonSize = 'small',
     dialogTitle = title,
     icon = { id: '@mui/icons-material/ContentPasteOutlined' }
   } = props;
+  // Protection against confusion of using the two props combined (i.e. useIcon, useIconWithText)...
+  if (useIconWithText) {
+    useIcon = false;
+  }
   const handleClick = () =>
     dispatch(
       showWidgetDialog({
@@ -40,8 +45,8 @@ export function OpenSmartCopyToolbarButton(props) {
         widget: { id: 'org.rd.plugin.smartcopy.dialog' }
       })
     );
-  const applyTooltip = (thing) => {
-    return useIcon || props.tooltip ? <Tooltip title={tooltip}>{thing}</Tooltip> : thing;
+  const applyTooltip = (children) => {
+    return useIcon || props.tooltip ? <Tooltip title={tooltip}>{children}</Tooltip> : children;
   };
   return applyTooltip(
     useIcon ? (
@@ -49,7 +54,12 @@ export function OpenSmartCopyToolbarButton(props) {
         <SystemIcon icon={icon} />
       </IconButton>
     ) : (
-      <Button size={buttonSize} onClick={handleClick}>
+      <Button
+        size={buttonSize}
+        onClick={handleClick}
+        startIcon={useIconWithText ? <SystemIcon icon={icon} /> : void 0}
+        sx={{ [`.${buttonClasses.startIcon}`]: { mr: 0.5 } }}
+      >
         {title}
       </Button>
     )

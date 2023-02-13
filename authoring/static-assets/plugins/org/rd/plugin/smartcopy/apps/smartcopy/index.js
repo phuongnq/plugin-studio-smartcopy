@@ -39,7 +39,7 @@ const ToolsPanelListItemButton = craftercms.components.ToolsPanelListItemButton 
 const Tooltip = craftercms.libs.MaterialUI.Tooltip && Object.prototype.hasOwnProperty.call(craftercms.libs.MaterialUI.Tooltip, 'default') ? craftercms.libs.MaterialUI.Tooltip['default'] : craftercms.libs.MaterialUI.Tooltip;
 const IconButton = craftercms.libs.MaterialUI.IconButton && Object.prototype.hasOwnProperty.call(craftercms.libs.MaterialUI.IconButton, 'default') ? craftercms.libs.MaterialUI.IconButton['default'] : craftercms.libs.MaterialUI.IconButton;
 const SystemIcon = craftercms.components.SystemIcon && Object.prototype.hasOwnProperty.call(craftercms.components.SystemIcon, 'default') ? craftercms.components.SystemIcon['default'] : craftercms.components.SystemIcon;
-const { Button: Button$1 } = craftercms.libs.MaterialUI;
+const { Button: Button$1, buttonClasses } = craftercms.libs.MaterialUI;
 
 /*
  * Copyright (C) 2007-2022 Crafter Software Corporation. All Rights Reserved.
@@ -4408,16 +4408,13 @@ function App() {
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 function OpenSmartCopyPanelButton(props) {
-    var buttonLabel = props.title ? props.title : 'Smart Copy';
-    var buttonIcon = props.icon && props.icon.id ? props.icon.id : '@mui/icons-material/ContentPasteOutlined';
     var dispatch = useDispatch();
-    return (React$1.createElement(ToolsPanelListItemButton, { icon: { id: buttonIcon }, title: buttonLabel, onClick: function () {
+    var _a = props.title, title = _a === void 0 ? 'Smart Copy' : _a, _b = props.icon, icon = _b === void 0 ? { id: '@mui/icons-material/ContentPasteOutlined' } : _b;
+    return (React$1.createElement(ToolsPanelListItemButton, { icon: icon, title: title, onClick: function () {
             return dispatch(showWidgetDialog({
-                title: buttonLabel,
+                title: title,
                 extraProps: props,
-                widget: {
-                    id: 'org.rd.plugin.smartcopy.dialog'
-                }
+                widget: { id: 'org.rd.plugin.smartcopy.dialog' }
             }));
         } }));
 }
@@ -4438,8 +4435,13 @@ function OpenSmartCopyPanelButton(props) {
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 function OpenSmartCopyToolbarButton(props) {
+    var _a;
     var dispatch = useDispatch();
-    var _a = props.title, title = _a === void 0 ? 'Smart Copy' : _a, _b = props.tooltip, tooltip = _b === void 0 ? title : _b, _c = props.useIcon, useIcon = _c === void 0 ? true : _c, _d = props.buttonSize, buttonSize = _d === void 0 ? 'small' : _d, _e = props.dialogTitle, dialogTitle = _e === void 0 ? title : _e, _f = props.icon, icon = _f === void 0 ? { id: '@mui/icons-material/ContentPasteOutlined' } : _f;
+    var _b = props.title, title = _b === void 0 ? 'Smart Copy' : _b, _c = props.tooltip, tooltip = _c === void 0 ? title : _c, _d = props.useIcon, useIcon = _d === void 0 ? true : _d, _e = props.useIconWithText, useIconWithText = _e === void 0 ? false : _e, _f = props.buttonSize, buttonSize = _f === void 0 ? 'small' : _f, _g = props.dialogTitle, dialogTitle = _g === void 0 ? title : _g, _h = props.icon, icon = _h === void 0 ? { id: '@mui/icons-material/ContentPasteOutlined' } : _h;
+    // Protection against confusion of using the two props (i.e. useIcon, useIconWithText) combined...
+    if (useIconWithText) {
+        useIcon = false;
+    }
     var handleClick = function () {
         return dispatch(showWidgetDialog({
             title: dialogTitle,
@@ -4447,11 +4449,11 @@ function OpenSmartCopyToolbarButton(props) {
             widget: { id: 'org.rd.plugin.smartcopy.dialog' }
         }));
     };
-    var wrap = function (thing) {
-        return useIcon || props.tooltip ? React$1.createElement(Tooltip, { title: tooltip }, thing) : thing;
+    var applyTooltip = function (children) {
+        return useIcon || props.tooltip ? React$1.createElement(Tooltip, { title: tooltip }, children) : children;
     };
-    return wrap(useIcon ? (React$1.createElement(IconButton, { size: buttonSize, onClick: handleClick },
-        React$1.createElement(SystemIcon, { icon: icon }))) : (React$1.createElement(Button$1, { size: buttonSize, onClick: handleClick }, title)));
+    return applyTooltip(useIcon ? (React$1.createElement(IconButton, { size: buttonSize, onClick: handleClick },
+        React$1.createElement(SystemIcon, { icon: icon }))) : (React$1.createElement(Button$1, { size: buttonSize, onClick: handleClick, startIcon: useIconWithText ? React$1.createElement(SystemIcon, { icon: icon }) : void 0, sx: (_a = {}, _a[".".concat(buttonClasses.startIcon)] = { mr: 0.5 }, _a) }, title)));
 }
 
 /*

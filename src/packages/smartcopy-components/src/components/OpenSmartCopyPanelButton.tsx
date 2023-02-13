@@ -21,10 +21,7 @@ import { useDispatch } from 'react-redux';
 
 export function OpenSmartCopyPanelButton(props) {
   const dispatch = useDispatch();
-  const {
-    title = 'Smart Copy',
-    icon = { id: '@mui/icons-material/ContentPasteOutlined' }
-  } = props;
+  const { title = 'Smart Copy', icon = { id: '@mui/icons-material/ContentPasteOutlined' } } = props;
   return (
     <ToolsPanelListItemButton
       icon={icon}
