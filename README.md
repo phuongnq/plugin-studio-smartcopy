@@ -11,6 +11,7 @@
 # Installation
 
 1. Install the plugin via Studio's Plugin Management UI under `Site Tools` > `Plugin Management
+   
    OR You can also install this plugin by cloning this repository and using the Studio API.
 
 	1a. Create a Studio JWT Token.
