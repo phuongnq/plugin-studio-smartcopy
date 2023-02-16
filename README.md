@@ -10,7 +10,23 @@
  
 # Installation
 
-1. Install the plugin via Studio's Plugin Management UI under `Site Tools` > `Plugin Management`.
+1. Install the plugin via Studio's Plugin Management UI under `Site Tools` > `Plugin Management
+   OR You can also install this plugin by cloning this repository and using the Studio API.
+
+	1a. Create a Studio JWT Token.
+	1b. Execute the following CURL command a terminal
+
+	```bash
+	curl --location --request POST 'http://SERVER_AND_PORT/studio/api/2/marketplace/copy' \
+	--header 'Authorization: Bearer THE_JWT_TOKEN_FOR_STUDIO' \
+	--header 'Content-Type: application/json' \
+	--data-raw '{
+	  "siteId": "YOUR-SITE-ID",
+	  "path": "THE_ABSOLUTEL_FILE_SYSTEM_PATH_TO_THIS_REPO",
+	  "parameters": { }
+	}
+	```
+
 2. Copy or incorporate `src/packages/custom-locale/src/controller.groovy` into each content type you want to use smart copy on (this controller exectures on copy command and will update paths and metadata like locales.
 3. Add the following felds to your content types:
  - Control type: Custom Locale Control 
